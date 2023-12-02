@@ -6,13 +6,16 @@ public class Day2 {
     public static void main(String[] args) throws FileNotFoundException {
         FileInputStream fs = new FileInputStream("./src/day2.txt");
         Scanner in = new Scanner(fs);
-        int reds = 12;
-        int greens = 13;
-        int blues = 14;
-        int game = 0;
+//        int reds = 12;
+//        int greens = 13;
+//        int blues = 14;
+//        int game = 0;
         int result = 0;
         while(in.hasNextLine()) {
-            game++;
+            int reds = 0;
+            int greens = 0;
+            int blues = 0;
+//            game++;
             String curr = in.nextLine();
             curr = curr.split(": ")[1];
             String[] guesses = curr.split("; ");
@@ -26,27 +29,18 @@ public class Day2 {
                     String color = split[1];
                     switch (color) {
                         case "red":
-                            if(num > reds) {
-                                impossible = true;
-                                break;
-                            }
+                            reds = Math.max(reds, num);
                             break;
                         case "green":
-                            if(num > greens) {
-                                impossible = true;
-                                break;
-                            }
+                            greens = Math.max(greens, num);
                             break;
                         case "blue":
-                            if(num > blues) {
-                                impossible = true;
-                                break;
-                            }
+                            blues = Math.max(blues, num);
                             break;
                     }
                 }
             }
-            result = impossible ? result : result + game;
+            result += reds * greens * blues;
         }
         System.out.println(result);
     }
