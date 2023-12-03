@@ -16,6 +16,7 @@ public class Day2 {
             int greens = 0;
             int blues = 0;
 //            game++;
+
             String curr = in.nextLine();
             curr = curr.split(": ")[1];
             String[] guesses = curr.split("; ");
@@ -39,6 +40,7 @@ public class Day2 {
                             break;
                     }
                 }
+
             }
             result += reds * greens * blues;
         }
