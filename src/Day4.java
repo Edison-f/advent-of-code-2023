@@ -1,5 +1,6 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -8,26 +9,22 @@ public class Day4 {
         FileInputStream fs = new FileInputStream("./src/day4.txt");
         Scanner in = new Scanner(fs);
         int result = 0;
-        int[] reruns = new int[204];
-        int[] totals = new int[204];
-        boolean[] seen = new boolean[204];
-        int i = 1;
-        String currString = in.nextLine();
+        int[] reruns = new int[203];
+        Arrays.fill(reruns, 1);
+        int[] totals = new int[203];
+        int i = 0;
+        int times;
         int currCard;
-        while(!seen[i] || (i != reruns.length && reruns[i] > 0)) {
+        while (in.hasNextLine()) {
+            times = 0;
             int matches = 0;
-            seen[i] = true;
-            currCard = Integer.parseInt(currString.split(":")[0].split(" ")[1]);
-            if(i != currCard) {
-                currString = in.nextLine();
-            }
-            String[] split = currString.split(" \\| ");
+            String[] split = in.nextLine().split(" \\| ");
             String[] winning = split[0].split(": ")[1].split(" ");
             String[] numbers = split[1].split(" ");
             HashSet<Integer> winSet = new HashSet<>();
             for (String s :
                     winning) {
-                if(!s.isEmpty()) {
+                if (!s.isEmpty()) {
                     winSet.add(Integer.parseInt(s));
                 }
             }
@@ -35,19 +32,19 @@ public class Day4 {
                     numbers) {
                 if (!s.isEmpty() && winSet.contains(Integer.parseInt(s))) {
                     matches++;
-                    reruns[i]--;
                 }
             }
-            for(int j = i + 1; j < i + 1 + matches; j++) {
-                reruns[j]++;
-                totals[j]++;
+            for (int k = 0; k < reruns[i]; k++) {
+                for (int j = i + 1; j < i + 1 + matches; j++) {
+                    reruns[j]++;
+//                    totals[j]++;
+                }
             }
-            if(reruns[i] == 0) {
-                i++;
-            }
+            i++;
             System.out.println(matches);
         }
-        for(int j : totals) {
+        for (int k = 0; k < reruns.length; k++) {
+            int j = reruns[k];
             result += j;
         }
         System.out.println(result);
