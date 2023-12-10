@@ -7,20 +7,22 @@ public class Day6 {
     public static void main(String[] args) throws FileNotFoundException {
         FileInputStream fs = new FileInputStream("./src/day6.txt");
         Scanner in = new Scanner(fs);
-        int result = -1;
-        ArrayList<Integer> time = new ArrayList<>();
-        ArrayList<Integer> distance = new ArrayList<>();
+        long result = -1;
+        ArrayList<Long> time = new ArrayList<>();
+        ArrayList<Long> distance = new ArrayList<>();
 
-        String[] read = in.nextLine().split("\\s+");
-        for (int i = 1; i < read.length; i++) {
-            time.add(Integer.parseInt(read[i]));
+        String[] read = in.nextLine().split(":\\s+")[1].split("\\s+");
+        String join = "";
+        for (int i = 0; i < read.length; i++) {
+            join += read[i];
         }
-        read = in.nextLine().split("\\s");
-        for (int i = 1; i < read.length; i++) {
-            try {
-                distance.add(Integer.parseInt(read[i]));
-            } catch (Exception ignored) {}
+        time.add(Long.parseLong(join));
+        join = "";
+        read = in.nextLine().split(":\\s+")[1].split("\\s+");
+        for (int i = 0; i < read.length; i++) {
+            join += read[i];
         }
+        distance.add(Long.parseLong(join));
 
         for(int i = 0; i < time.size(); i++) {
             int count = 0;
