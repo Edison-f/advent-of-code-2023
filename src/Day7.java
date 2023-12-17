@@ -1,9 +1,6 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class Day7 {
     public static void main(String[] args) throws FileNotFoundException {
@@ -18,15 +15,19 @@ public class Day7 {
         ArrayList<String> one = new ArrayList<>();
         ArrayList<String> high = new ArrayList<>();
         long result = 0;
-        while(in.hasNextLine()) {
+        while (in.hasNextLine()) {
             String[] split = in.nextLine().split(" ");
             String hand = split[0];
             String bet = split[1];
             bets.put(hand, Integer.parseInt(bet));
             HashMap<Character, Integer> map = new HashMap<>();
             int[] counter = new int[6];
+            int jokers = 0;
             for (int i = 0; i < hand.length(); i++) {
-                if(map.containsKey(hand.charAt(i))) {
+                if (hand.charAt(i) == 'J') {
+                    jokers++;
+                }
+                if (map.containsKey(hand.charAt(i))) {
                     map.put(hand.charAt(i), map.get(hand.charAt(i)) + 1);
                 } else {
                     map.put(hand.charAt(i), 1);
@@ -37,17 +38,26 @@ public class Day7 {
                     vals) {
                 counter[(Integer) o]++;
             }
-            if(counter[5] == 1) {
+            for (int i = counter.length - 1; i >= 0 && jokers != 0; i--) {
+                if (counter[i] > 1 || (counter[i] == 1 && jokers != i)) {
+                    counter[i + jokers]++;
+                    counter[i]--;
+                    counter[jokers]--;
+                    System.out.println(hand + " " + jokers + " " + i + " " + Arrays.toString(counter));
+                    break;
+                }
+            }
+            if (counter[5] == 1) {
                 five.add(hand);
-            } else if(counter[4] == 1) {
+            } else if (counter[4] == 1) {
                 four.add(hand);
-            } else if(counter[3] == 1 && counter[2] == 1) {
+            } else if (counter[3] == 1 && counter[2] == 1) {
                 full.add(hand);
-            } else if(counter[3] == 1) {
+            } else if (counter[3] == 1) {
                 three.add(hand);
-            } else if(counter[2] == 2) {
+            } else if (counter[2] == 2) {
                 two.add(hand);
-            } else if(counter[2] == 1) {
+            } else if (counter[2] == 1) {
                 one.add(hand);
             } else {
                 high.add(hand);
@@ -67,12 +77,12 @@ public class Day7 {
         all.add(high);
 
         int size = 0;
-        for(ArrayList<String> arr : all) {
+        for (ArrayList<String> arr : all) {
             arr.sort(new CamelComparator());
             size += arr.size();
         }
 
-        for(ArrayList<String> arr : all) {
+        for (ArrayList<String> arr : all) {
             for (int i = 0; i < arr.size(); i++) {
                 String s = arr.get(i);
                 result += (long) bets.get(s) * (long) size;
@@ -83,21 +93,21 @@ public class Day7 {
         System.out.println(result);
     }
 
-    static class CamelComparator implements Comparator<String> {
+    static class CamelComparator implements Comparator<String> { // Bunch of special cases
 
-        public char[] sequence = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
+        public char[] sequence = new char[]{'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'};
 
         @Override
         public int compare(String s1, String s2) {
-            for(int i = 0; i < s1.length(); i++) {
+            for (int i = 0; i < s1.length(); i++) {
                 boolean found = false;
                 for (int j = 0; j < sequence.length && !found; j++) {
                     char c = sequence[j];
                     if (s1.charAt(i) == c && s2.charAt(i) == c) {
                         found = true;
-                    } else if(s1.charAt(i) == c) {
+                    } else if (s1.charAt(i) == c) {
                         return -1;
-                    } else if(s2.charAt(i) == c) {
+                    } else if (s2.charAt(i) == c) {
                         return 1;
                     }
                 }
