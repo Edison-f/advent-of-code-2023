@@ -68,7 +68,7 @@ public class Day8 {
         System.out.println(result);
     }
 
-    public static long lcm(long x, Long y) {
+    public static long lcm(long x, long y) {
         long multi = x * y;
         long gcd = gcd(x, y);
         System.out.println(multi + " " + gcd);
