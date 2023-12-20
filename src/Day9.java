@@ -24,12 +24,12 @@ public class Day9 {
                 diffs.add(curr);
             }
             for(int i = diffs.size() - 1; i > 0; i--) {
-                diffs.get(i - 1).add(
-                        diffs.get(i - 1).get(diffs.get(i - 1).size() - 1) +
-                                diffs.get(i).get(diffs.get(i).size() - 1));
+                diffs.get(i - 1).add(0,
+                        diffs.get(i - 1).get(0) -
+                                diffs.get(i).get(0));
             }
-            result += diffs.get(0).get(diffs.get(0).size() - 1);
-            System.out.println(diffs.get(0).get(diffs.get(0).size() - 1));
+            result += diffs.get(0).get(0);
+            System.out.println(diffs.get(0).get(0));
         }
         System.out.println("\n-===-\n" + result);
     }
