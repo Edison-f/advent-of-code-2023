@@ -1,9 +1,14 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Day11 {
+
+    static ArrayList<Integer> expandRow = new ArrayList<>();
+    static ArrayList<Integer> expandColumn = new ArrayList<>();
+
     public static void main(String[] args) throws FileNotFoundException {
         FileInputStream fs = new FileInputStream("./src/day11.txt");
         Scanner in = new Scanner(fs);
@@ -28,8 +33,14 @@ public class Day11 {
         long result = 0;
         for(int i = 0; i < coords.size(); i++) {
             for(int j = i + 1; j < coords.size(); j++) {
-                result += Math.abs(coords.get(i)[0] - coords.get(j)[0]);
-                result += Math.abs(coords.get(i)[1] - coords.get(j)[1]);
+                int x = coords.get(i)[0];
+                int y = coords.get(j)[0];
+                long mult = intersect(expandRow, x, y);
+                result += Math.abs(x - y) + (mult * 999999L);
+                x = coords.get(i)[1];
+                y = coords.get(j)[1];
+                mult = intersect(expandColumn, x, y);
+                result += Math.abs(x - y) + (mult * 999999L);
             }
         }
         System.out.println(result);
@@ -37,9 +48,10 @@ public class Day11 {
 
     public static ArrayList<String> expand(ArrayList<String> orig) {
         ArrayList<String> result = new ArrayList<>();
-        for (String s : orig) {
-            if(s.indexOf('#') == -1) {
-                result.add(s);
+        for (int j = 0; j < orig.size(); j++) {
+            String s = orig.get(j);
+            if (s.indexOf('#') == -1) {
+                expandRow.add(j);
             }
             result.add(s);
         }
@@ -52,12 +64,38 @@ public class Day11 {
                 }
             }
             if(empty) {
-                for (int j = 0; j < result.size(); j++) {
-                    result.set(j, result.get(j).substring(0, i) + "." + result.get(j).substring(i));
-                }
-                i++;
+                expandColumn.add(i);
             }
         }
         return result;
+    }
+
+    public static int intersect(ArrayList<Integer> locs, int n1, int n2) {
+        int min = Math.min(n1, n2);
+        int max = Math.max(n1, n2);
+        int start;
+        int end;
+        if(!sorted(locs)) {
+            Collections.sort(locs);
+        }
+        int i = 0;
+        while (i < locs.size() && min > locs.get(i)) {
+            i++;
+        }
+        start = i;
+        while(i < locs.size() && max > locs.get(i)) {
+            i++;
+        }
+        end = i;
+        return end - start;
+    }
+
+    public static boolean sorted(ArrayList<Integer> arr) {
+        for (int i = 0; i < arr.size() - 1; i++) {
+            if(arr.get(i) > arr.get(i + 1)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
